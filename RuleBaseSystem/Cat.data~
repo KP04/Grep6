@@ -1,0 +1,10 @@
+rule 	"CatRule1"
+if 	"?x is native to Japan"
+then 	"?x is Japanese-Bobtail"
+
+rule	"CatRule2"
+if	"?x is native to America"
+	"?x has long tail"
+then	"?x is American-Shorthair"
+
+
