@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class BackwardChain {
-    static BackwordRuleBase rb;
+    static BackwardRuleBase rb;
     static FileManager fm;
     public static void main(String args[]){
 	if(args.length != 1){
@@ -12,11 +12,11 @@ public class BackwardChain {
 	    System.out.println("  %java RuleBaseSystem \"?x is b,?x is c\"");
 	} else {
 	    fm = new FileManager();
-	    ArrayList<BackwordRule> rules = fm.loadRules("CarShop.data");
+	    ArrayList<BackwardRule> rules = fm.loadRules("CarShop.data");
 	    //ArrayList rules = fm.loadRules("AnimalWorld.data");
 	    ArrayList<String> wm    = fm.loadWm("CarShopWm1.data");
 	    //ArrayList wm    = fm.loadWm("AnimalWorldWm.data");
-	    rb = new BackwordRuleBase(rules,wm);
+	    rb = new BackwardRuleBase(rules,wm);
 	    StringTokenizer st = new StringTokenizer(args[0],",");
 	    ArrayList<String> queries = new ArrayList<String>();
 	    for(int i = 0 ; i < st.countTokens();){
@@ -27,43 +27,56 @@ public class BackwardChain {
     }
 }
     
-class BackwordRuleBase implements Serializable{
+class BackwardRuleBase implements Serializable{
     String fileName;
     ArrayList<String> wm;
-    ArrayList<BackwordRule> rules;
-    String anAnswer;
+    ArrayList<BackwardRule> rules;
+    RuleBaseFrame rbf;
     
-    BackwordRuleBase(ArrayList<BackwordRule> theRules,ArrayList<String> theWm){
+    BackwardRuleBase(ArrayList<BackwardRule> theRules,ArrayList<String> theWm){
 	wm = theWm;
 	rules = theRules;
+    }
+    
+    BackwardRuleBase(ArrayList<BackwardRule> theRules,ArrayList<String> theWm, RuleBaseFrame rbf){
+    	wm = theWm;
+    	rules = theRules;
+    	this.rbf = rbf;
     }
 
     public void setWm(ArrayList<String> theWm){
 	wm = theWm;
     }
 
-    public void setRules(ArrayList<BackwordRule> theRules){
+    public void setRules(ArrayList<BackwardRule> theRules){
 	rules = theRules;
     }
 
     public void backwardChain(ArrayList<String> hypothesis){
 	System.out.println("Hypothesis:"+hypothesis);
+	writeProBuffer("Hypothesis:"+hypothesis);
 	ArrayList<String> orgQueries = (ArrayList)hypothesis.clone();
 	//HashMap<String,String> binding = new HashMap<String,String>();
 	HashMap<String,String> binding = new HashMap<String,String>();
 	if(matchingPatterns(hypothesis,binding)){
-	    //System.out.println("Yes");
-	    //System.out.println(binding);
+	    System.out.println("Yes");
+	    writeProBuffer("Yes");
+	    System.out.println(binding);
+	    writeProBuffer(binding.toString());
 	    // 最終的な結果を基のクェリーに代入して表示する
 	    for(int i = 0 ; i < orgQueries.size() ; i++){
 		String aQuery = (String)orgQueries.get(i);
-		//System.out.println("binding: "+binding);
-		anAnswer = instantiate(aQuery,binding);
-		//System.out.println("Query: "+aQuery);
-		//System.out.println("Answer:"+anAnswer);
+		System.out.println("binding: "+binding);
+		writeProBuffer("binding: "+binding);
+		String anAnswer = instantiate(aQuery,binding);
+		System.out.println("Query: "+aQuery);
+		writeProBuffer("Query: "+aQuery);
+		System.out.println("Answer:"+anAnswer);
+		writeOutBuffer("Answer:"+anAnswer);
 	    }
 	} else {
 	    System.out.println("No");
+	    writeProBuffer("No");
 	}
     }
 
@@ -94,9 +107,11 @@ class BackwordRuleBase implements Serializable{
 	          orgBinding.put(key,value);
 	      }
 	      int tmpPoint = matchingPatternOne(firstPattern,theBinding,cPoint);
-	      //System.out.println("tmpPoint: "+tmpPoint);
+	      System.out.println("tmpPoint: "+tmpPoint);
+	      writeProBuffer("tmpPoint: "+tmpPoint);
 	      if(tmpPoint != -1){
-	          //System.out.println("Success:"+firstPattern);
+	          System.out.println("Success:"+firstPattern);
+	          writeProBuffer("Success:"+firstPattern);
 	          if(matchingPatterns(thePatterns,theBinding)){
 	              //成功  
 	              return true;
@@ -141,8 +156,10 @@ class BackwordRuleBase implements Serializable{
 	    if((new Unifier()).unify(thePattern,
 				     (String)wm.get(i),
 				     theBinding)){
-		//System.out.println("Success WM");
-		//System.out.println((String)wm.get(i)+" <=> "+thePattern);
+		System.out.println("Success WM");
+		writeProBuffer("Success WM");
+		System.out.println((String)wm.get(i)+" <=> "+thePattern);
+		writeProBuffer((String)wm.get(i)+" <=> "+thePattern);
 		return i+1;
 	    }
 	}
@@ -150,7 +167,7 @@ class BackwordRuleBase implements Serializable{
       if(cPoint < wm.size() + rules.size()){
 	// Ruleと Unify してみる．
  	for(int i = cPoint ; i < rules.size() ; i++){
- 	    BackwordRule aRule = rename((BackwordRule)rules.get(i));
+ 		BackwardRule aRule = rename((BackwardRule)rules.get(i));
 	    // 元のバインディングを取っておく．
 	    HashMap<String,String> orgBinding = new HashMap<String,String>();
 	    for(Iterator<String> itr = theBinding.keySet().iterator(); itr.hasNext();){
@@ -161,8 +178,10 @@ class BackwordRuleBase implements Serializable{
  	    if((new Unifier()).unify(thePattern,
  				     (String)aRule.getConsequent(),
  				     theBinding)){
-		//System.out.println("Success RULE");
-		//System.out.println("Rule:"+aRule+" <=> "+thePattern);
+		System.out.println("Success RULE");
+		writeProBuffer("Success RULE");
+		System.out.println("Rule:"+aRule+" <=> "+thePattern);
+		writeProBuffer("Rule:"+aRule+" <=> "+thePattern);
  		// さらにbackwardChaining
  		ArrayList<String> newPatterns = aRule.getAntecedents();
 		if(matchingPatterns(newPatterns,theBinding)){
@@ -188,8 +207,8 @@ class BackwordRuleBase implements Serializable{
      * @return  変数がリネームされたルールのコピーを返す．
      */
     int uniqueNum = 0;
-    private BackwordRule rename(BackwordRule theRule){
-	BackwordRule newRule = theRule.getRenamedRule(uniqueNum);
+    private BackwardRule rename(BackwardRule theRule){
+    	BackwardRule newRule = theRule.getRenamedRule(uniqueNum);
 	uniqueNum = uniqueNum + 1;
 	return newRule;
     }
@@ -202,6 +221,7 @@ class BackwordRuleBase implements Serializable{
 	    if(var(tmp)){
 		result = result + " " + (String)theBindings.get(tmp);
 	      System.out.println("tmp: "+tmp+", result: "+result);
+	      writeProBuffer("tmp: "+tmp+", result: "+result);
 	    } else {
 		result = result + " " + tmp;
 	    }
@@ -213,13 +233,23 @@ class BackwordRuleBase implements Serializable{
 	// 先頭が ? なら変数
 	return str1.startsWith("?");
     }
+    
+    public void writeProBuffer(String s){
+    	rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
+       rbf.proTextArea.setText(rbf.getProBuffer());
+    }
+    
+    public void writeOutBuffer(String s){
+    	rbf.setOutBuffer(rbf.getOutBuffer()+s+"\n");
+       rbf.outTextArea.setText(rbf.getOutBuffer());
+    }
 }
 
 class FileManager {
     FileReader f;
     StreamTokenizer st;
-    public ArrayList<BackwordRule> loadRules(String theFileName){
-	ArrayList<BackwordRule> rules = new ArrayList<BackwordRule>();
+    public ArrayList<BackwardRule> loadRules(String theFileName){
+	ArrayList<BackwardRule> rules = new ArrayList<BackwardRule>();
 	String line;
 	try{
 	    int token;
@@ -249,7 +279,7 @@ class FileManager {
 			    }
 			}
 			rules.add(
-			    new BackwordRule(name,antecedents,consequent));
+			    new BackwardRule(name,antecedents,consequent));
 			break;
 		    default:
 			System.out.println(token);
@@ -290,18 +320,18 @@ class FileManager {
 /**
  * ルールを表すクラス．
  */
-class BackwordRule implements Serializable{
+class BackwardRule implements Serializable{
     String name;
     ArrayList<String> antecedents;
     String consequent;
 
-    BackwordRule(String theName,ArrayList<String> theAntecedents,String theConsequent){
+    BackwardRule(String theName,ArrayList<String> theAntecedents,String theConsequent){
 	this.name = theName;
 	this.antecedents = theAntecedents;
 	this.consequent = theConsequent;
     }
 
-    public BackwordRule getRenamedRule(int uniqueNum){
+    public BackwardRule getRenamedRule(int uniqueNum){
 	ArrayList<String> vars = new ArrayList<String>();
 	for(int i = 0 ; i < antecedents.size() ; i++){
 	    String antecedent = (String)this.antecedents.get(i);
@@ -320,7 +350,7 @@ class BackwordRule implements Serializable{
 	String newConsequent = renameVars(consequent,
 					  renamedVarsTable);
 
-	BackwordRule newRule = new BackwordRule(name,newAntecedents,newConsequent);
+	BackwardRule newRule = new BackwardRule(name,newAntecedents,newConsequent);
 	return newRule;
     }
 
