@@ -51,12 +51,12 @@
 </ul>
 
 <h2>役割分担</h2> 
-<ul>
-<li>塩谷 昂平   : 課題6-1 考察担当
-<li>瀬戸口 大貴 : 課題6-2 実装担当
-<li>佐藤 嵩晟   : 課題6-3 GUI担当
-<li>長谷川 達也 : 課題6-4 考察担当 グループ作成書類担当
-</ul>
+<div>
+<div><span class="name">塩谷 昂平</span><span class="task"> : 課題6-1 考察担当</span></div> 
+<div><span class="name">瀬戸口 大貴</span><span class="task"> : 課題6-2 実装担当</span></div> 
+<div><span class="name">佐藤 嵩晟</span><span class="task"> : 課題6-3 GUI担当</span></div> 
+<div><span class="name">長谷川 達也</span><span class="task"> : 課題6-4 考察担当 グループ作成書類担当</span></div> 
+</div>
 
 <h2>ソースファイル</h2>
 <ul>
