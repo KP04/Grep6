@@ -6,9 +6,9 @@ import java.io.*;
  * 
  */
 public class ForwardChain {
-    static ForwordRuleBase rb;
+    static ForwardRuleBase rb;
     public static void main(String args[]){
-        rb = new ForwordRuleBase();
+        rb = new ForwardRuleBase();
         rb.forwardChain();      
     }
 }
@@ -85,7 +85,13 @@ class WorkingMemory {
      * @param     アサーションを表す String
      */
     public void addAssertion(String theAssertion){
-        //System.out.println("ADD:"+theAssertion);
+        System.out.println("ADD:"+theAssertion);
+        assertions.add(theAssertion);
+    }
+    
+    public void addAssertion(String theAssertion, RuleBaseFrame rbf){
+        System.out.println("ADD:"+theAssertion);
+        writeProBuffer("ADD:"+theAssertion,rbf);
         assertions.add(theAssertion);
     }
 
@@ -108,6 +114,11 @@ class WorkingMemory {
         return assertions.toString();
     }
     
+    public void writeProBuffer(String s, RuleBaseFrame rbf){
+    	rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
+       rbf.proTextArea.setText(rbf.getProBuffer());
+    }
+    
 }
 
 /**
@@ -115,14 +126,16 @@ class WorkingMemory {
  *
  * 
  */
-class ForwordRuleBase {
+class ForwardRuleBase {
     String fileName;
     FileReader f;
     StreamTokenizer st;
     WorkingMemory wm;
-    ArrayList<ForwordRule> rules;
+    ArrayList<ForwardRule> rules;
+    String buffer;
+    RuleBaseFrame rbf;
     
-    ForwordRuleBase(){
+    ForwardRuleBase(){
         fileName = "CarShop.data";
         wm = new WorkingMemory();
         wm.addAssertion("my-car is inexpensive");
@@ -131,8 +144,22 @@ class ForwordRuleBase {
         wm.addAssertion("my-car has several color models");
         wm.addAssertion("my-car has several seats");
         wm.addAssertion("my-car is a wagon");
-        rules = new ArrayList<ForwordRule>();
+        rules = new ArrayList<ForwardRule>();
         loadRules(fileName);
+    }
+    
+    ForwardRuleBase(String assertionFileName, String ruleFileName, RuleBaseFrame rbf){
+    	fileName = ruleFileName;
+    	wm = new WorkingMemory();
+    	this.rbf = rbf;
+    	
+    	ArrayList<String> assertion = FileLoading.fileLoading(assertionFileName);
+		for(int i=0; i<assertion.size(); i++){
+			wm.addAssertion(assertion.get(i),rbf);
+		}
+		
+		rules = new ArrayList<ForwardRule>();
+		loadRules(fileName);
     }
 
     /**
@@ -145,8 +172,9 @@ class ForwordRuleBase {
         do {
             newAssertionCreated = false;
             for(int i = 0 ; i < rules.size(); i++){
-                ForwordRule aRule = (ForwordRule)rules.get(i);
-                //System.out.println("apply rule:"+aRule.getName());
+            	  ForwardRule aRule = (ForwardRule)rules.get(i);
+                System.out.println("apply rule:"+aRule.getName());
+                writeProBuffer("apply rule:"+aRule.getName());
                 ArrayList<String> antecedents = aRule.getAntecedents();
                 String consequent  = aRule.getConsequent();
                 //HashMap bindings = wm.matchingAssertions(antecedents);
@@ -159,16 +187,19 @@ class ForwordRuleBase {
                                         (HashMap)bindings.get(j));
                         //ワーキングメモリーになければ成功
                         if(!wm.contains(newAssertion)){
-                            //System.out.println("Success: "+newAssertion);
+                            System.out.println("Success: "+newAssertion);
+                            writeProBuffer("Success: "+newAssertion);
                             wm.addAssertion(newAssertion);
                             newAssertionCreated = true;
                         }
                     }
                 }
             }
-            //System.out.println("Working Memory"+wm);
+            System.out.println("Working Memory"+wm);
+            writeProBuffer("Working Memory"+wm);
         } while(newAssertionCreated);
-        //System.out.println("No rule produces a new assertion");
+        System.out.println("No rule produces a new assertion");
+        writeProBuffer("No rule produces a new assertion");
     }
 
     private String instantiate(String thePattern, HashMap theBindings){
@@ -190,7 +221,7 @@ class ForwordRuleBase {
         return str1.startsWith("?");
     }
 
-    void loadRules(String theFileName){
+    private void loadRules(String theFileName){
         String line;
         try{
             int token;
@@ -203,7 +234,7 @@ class ForwordRuleBase {
                         ArrayList<String> antecedents = null;
                         String consequent = null;
                         if("rule".equals(st.sval)){
-			    st.nextToken();
+                        		st.nextToken();
 //                            if(st.nextToken() == '"'){
                                 name = st.sval;
                                 st.nextToken();
@@ -222,10 +253,10 @@ class ForwordRuleBase {
 //                            } 
                         }
 			// ルールの生成
-                        rules.add(new ForwordRule(name,antecedents,consequent));
+                        rules.add(new ForwardRule(name,antecedents,consequent));
                         break;
                     default:
-                        //System.out.println(token);
+                        System.out.println(token);
                         break;
                 }
             }
@@ -233,8 +264,14 @@ class ForwordRuleBase {
             System.out.println(e);
         }
         for(int i = 0 ; i < rules.size() ; i++){
-            //System.out.println(((ForwordRule)rules.get(i)).toString());
+            System.out.println(((ForwardRule)rules.get(i)).toString());
+            	writeProBuffer(((ForwardRule)rules.get(i)).toString());
         }
+    }
+    
+    public void writeProBuffer(String s){
+    	rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
+       rbf.proTextArea.setText(rbf.getProBuffer());
     }
 }
 
@@ -243,12 +280,12 @@ class ForwordRuleBase {
  *
  * 
  */
-class ForwordRule {
+class ForwardRule {
     String name;
     ArrayList<String> antecedents;
     String consequent;
 
-    ForwordRule(String theName,ArrayList<String> theAntecedents,String theConsequent){
+    ForwardRule(String theName,ArrayList<String> theAntecedents,String theConsequent){
         this.name = theName;
         this.antecedents = theAntecedents;
         this.consequent = theConsequent;
