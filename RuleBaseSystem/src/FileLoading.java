@@ -8,7 +8,7 @@ public class FileLoading {
     	ArrayList<String> data = new ArrayList<String>();
     	
     	if(!(file.exists() && file.isFile())){//ファイルが存在しなかったら
-    		data.add("Error:Not found the file");
+    		data.add("error");
     		return data;
     	}
 

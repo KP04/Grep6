@@ -145,8 +145,8 @@ class RuleBaseFrame implements ActionListener {
 		// ファイルが見つからなかったら
 		if (assertion.get(0).equals("error") || rule.get(0).equals("error")) {
 			initBuffer();// バッファ初期化
-			assertionFileTextArea.setText(writeBuffer(assertion));
-			assertionFileTextArea.setText(writeBuffer(rule));
+			assertionTextArea.setText(writeBuffer(assertion));
+			ruleTextArea.setText(writeBuffer(rule));
 			return;
 		}
 
