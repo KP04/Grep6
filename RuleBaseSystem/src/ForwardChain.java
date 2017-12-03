@@ -9,7 +9,8 @@ public class ForwardChain {
     static ForwardRuleBase rb;
     public static void main(String args[]){
         rb = new ForwardRuleBase();
-        rb.forwardChain();      
+        rb.forwardChain();
+        System.out.println(Unify.Search(rb.wm.assertions, args));
     }
 }
 
@@ -89,10 +90,12 @@ class WorkingMemory {
         assertions.add(theAssertion);
     }
     
-    public void addAssertion(String theAssertion, RuleBaseFrame rbf){
-        System.out.println("ADD:"+theAssertion);
-        writeProBuffer("ADD:"+theAssertion,rbf);
-        assertions.add(theAssertion);
+    public void addAssertion(String theAssertion, RuleBaseFrame rbf, boolean flag){
+    	if(flag){
+    		System.out.println("ADD:"+theAssertion);
+    		writeProBuffer("ADD:"+theAssertion,rbf);
+    		assertions.add(theAssertion);
+    	}
     }
 
     /**
@@ -134,8 +137,10 @@ class ForwardRuleBase {
     ArrayList<ForwardRule> rules;
     String buffer;
     RuleBaseFrame rbf;
+    boolean flag;
     
     ForwardRuleBase(){
+    	flag = false;
         fileName = "CarShop.data";
         wm = new WorkingMemory();
         wm.addAssertion("my-car is inexpensive");
@@ -151,11 +156,12 @@ class ForwardRuleBase {
     ForwardRuleBase(String assertionFileName, String ruleFileName, RuleBaseFrame rbf){
     	fileName = ruleFileName;
     	wm = new WorkingMemory();
+    	flag = true;
     	this.rbf = rbf;
     	
     	ArrayList<String> assertion = FileLoading.fileLoading(assertionFileName);
 		for(int i=0; i<assertion.size(); i++){
-			wm.addAssertion(assertion.get(i),rbf);
+			wm.addAssertion(assertion.get(i),rbf,flag);
 		}
 		
 		rules = new ArrayList<ForwardRule>();
@@ -270,8 +276,10 @@ class ForwardRuleBase {
     }
     
     public void writeProBuffer(String s){
-    	rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
-       rbf.proTextArea.setText(rbf.getProBuffer());
+    	if(flag){
+    		rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
+    		rbf.proTextArea.setText(rbf.getProBuffer());
+    	}
     }
 }
 

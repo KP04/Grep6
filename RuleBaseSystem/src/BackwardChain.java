@@ -32,16 +32,19 @@ class BackwardRuleBase implements Serializable{
     ArrayList<String> wm;
     ArrayList<BackwardRule> rules;
     RuleBaseFrame rbf;
+    boolean flag;
     
     BackwardRuleBase(ArrayList<BackwardRule> theRules,ArrayList<String> theWm){
 	wm = theWm;
 	rules = theRules;
+	flag = false;
     }
     
     BackwardRuleBase(ArrayList<BackwardRule> theRules,ArrayList<String> theWm, RuleBaseFrame rbf){
     	wm = theWm;
     	rules = theRules;
     	this.rbf = rbf;
+    	flag = true;
     }
 
     public void setWm(ArrayList<String> theWm){
@@ -235,13 +238,17 @@ class BackwardRuleBase implements Serializable{
     }
     
     public void writeProBuffer(String s){
-    	rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
-       rbf.proTextArea.setText(rbf.getProBuffer());
+    	if(flag){
+    		rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
+    		rbf.proTextArea.setText(rbf.getProBuffer());
+    	}
     }
     
     public void writeOutBuffer(String s){
-    	rbf.setOutBuffer(rbf.getOutBuffer()+s+"\n");
-       rbf.outTextArea.setText(rbf.getOutBuffer());
+    	if(flag){
+    		rbf.setOutBuffer(rbf.getOutBuffer()+s+"\n");
+    		rbf.outTextArea.setText(rbf.getOutBuffer());
+    	}
     }
 }
 
