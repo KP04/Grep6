@@ -7,4 +7,8 @@ if	"?x is native to America"
 	"?x has long tail"
 then	"?x is American-Shorthair"
 
+rule	"CatRule3"
+if	"?x is native to America"
+	"?x has short tail"
+then	"?x is American-Bobtail"
 
