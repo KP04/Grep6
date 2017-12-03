@@ -135,7 +135,6 @@ class ForwardRuleBase {
     StreamTokenizer st;
     WorkingMemory wm;
     ArrayList<ForwardRule> rules;
-    String buffer;
     RuleBaseFrame rbf;
     boolean flag;
     
