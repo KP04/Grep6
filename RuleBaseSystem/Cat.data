@@ -1,14 +1,310 @@
 rule 	"CatRule1"
-if 	"?x is native to Japan"
-then 	"?x is Japanese-Bobtail"
+if 	"?x is native to Egypt"
+	"?x has short hair"
+	"?x has long tail"
+	"?x has large ear"
+	"?x has long foot"
+	"?x is medium"
+then 	"?x is Abyssinian"
 
 rule	"CatRule2"
 if	"?x is native to America"
 	"?x has long tail"
-then	"?x is American-Shorthair"
+	"?x is small"
+then	"?x is American-Curl"
 
 rule	"CatRule3"
 if	"?x is native to America"
+	"?x has long foot"
+	"?x is medium"
+then	"?x is American-Shorthair"
+
+rule	"CatRule4"
+if	"?x is native to Myanmar"
+	"?x has short hair"
+	"?x is medium"
+then	"?x is American-Burmese"
+
+rule	"CatRule5"
+if	"?x is native to America"
 	"?x has short tail"
 then	"?x is American-Bobtail"
+
+rule	"CatRule6"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has long foot"
+then	"?x is American-Ringtail"
+
+rule	"CatRule7"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has long tail"
+	"?x has medium ear"
+then	"?x is American-Wirehair"
+
+rule	"CatRule8"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has short tail"
+	"?x has small ear"
+then	"?x is Exotic-Shorthair"
+
+rule	"CatRule9"
+if	"?x is native to America"
+	"?x has long hair"
+	"?x has short tail"
+	"?x has small ear"
+then	"?x is Extoric-Longhair"
+
+rule	"CatRule10"
+if	"?x is native to Egypt"
+	"?x has short hair"
+	"?x has large ear"
+	"?x has long foot"
+then	"?x is Egyptianmau"
+
+rule	"CatRule11"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has long tail"
+	"?x has large ear"
+	"?x is medium"
+then	"?x is Ocicat"
+
+rule	"CatRule12"
+if	"?x is native to America"
+	"?x has short hair"
+then	"?x is Ojos-Azules"
+
+rule	"CatRule13"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has large ear"
+then	"?x is Oriental-Shorthair"
+
+rule	"CatRule14"
+if	"?x is native to America"
+	"?x has long hair"
+	"?x has large ear"
+then	"?x is Oriental-Longhair"
+
+rule	"CatRule15"
+if	"?x is native to Tie"
+	"?x has short hair"
+	"?x has medium tail"
+	"?x has large ear"
+then	"?x is Khaomanee"
+
+rule	"CatRule16"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has long tail"
+	"?x has large ear"
+	"?x has long foot"
+then	"?x is Colorpoint-Shorthair"
+
+rule	"CatRule17"
+if	"?x is native to Canada"
+	"?x has long hair"
+then	"?x is Cymric"
+
+rule	"CatRule18"
+if	"?x is native to America"
+	"?x has long tail"
+	"?x has short foot"
+then	"?x is Kinkalow"
+
+rule	"CatRule19"
+if	"?x is native to Russia"
+	"?x has short tail"
+	"?x has medium ear"
+then	"?x is Kurilian-Bobtail"
+
+rule	"CatRule20"
+if	"?x is native to Tie"
+	"?x has short hair"
+	"?x is medium"
+then	"?x is Korat"
+
+rule	"CatRule21"
+if	"?x is native to England"
+	"?x has short hair"
+	"?x has large ear"
+then	"?x is Cornish-Rex"
+
+rule	"CatRule22"
+if	"?x is native to Russia"
+	"?x has long hair"
+	"?x has long tail"
+	"?x is large"
+then	"?x is Siberian"
+
+rule	"CatRule23"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has large ear"
+	"?x has long foot"
+then	"?x is Savannah"
+
+rule	"CatRule24"
+if	"?x is native to Tie"
+	"?x has short hair"
+	"?x has long tail"
+	"?x has large ear"
+	"?x has long foot"
+then	"?x is Siamese"
+
+rule	"CatRule25"
+if	"?x is native to France"
+	"?x has short hair"
+	"?x has short foot"
+	"?x is large"
+then	"?x is Chartreux"
+
+rule	"CatRule26"
+if	"?x is native to Singapore"
+	"?x has short hair"
+	"?x has long tail"
+	"?x is small"
+then	"?x is Singapura"
+
+rule	"CatRule27"
+if	"?x is native to Japan"
+	"?x has short tail"
+then	"?x is Japanese-Bobtail"
+
+rule	"CatRule28"
+if	"?x is native to America"
+	"?x has long hair"
+	"?x has short foot"
+then	"?x is Skookum"
+
+rule	"CatRule29"
+if	"?x is native to Scotland"
+	"?x has small ear"
+then	"?x is Scottish-Straight"
+
+rule	"CatRule30"
+if	"?x is native to Scotland"
+	"?x has small ear"
+then	"?x is Scottish-Fold"
+
+rule	"CatRule31"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has long tail"
+	"?x has large ear"
+	"?x is medium"
+then	"?x is Showshoe"
+
+rule	"CatRule32"
+if	"?x is native to Canada"
+	"?x has short hair"
+	"?x has large ear"
+then	"?x is Sphynx"
+
+rule	"CatRule33"
+if	"?x is native to England"
+	"?x has short hair"
+	"?x has large ear"
+	"?x has long foot"
+then	"?x is Seychellois"
+
+rule	"CatRule34"
+if	"?x is native to America"
+then	"?x is Selkirk-Rex"
+
+rule	"CatRule35"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has long tail"
+	"?x has large ear"
+	"?x has long foot"
+then	"?x is Serengeti"
+
+rule	"CatRule36"
+if	"?x is native to Kenya"
+	"?x has short hair"
+	"?x has long tail"
+	"?x has large ear"
+	"?x has long foot"
+then	"?x is Sokoke"
+
+rule	"CatRule37"
+if	"?x is native to England"
+	"?x has long hair"
+	"?x has long tail"
+	"?x has large ear"
+	"?x is small"
+then	"?x is Somali"
+
+rule	"CatRule38"
+if	"?x is native to Turkey"
+	"?x has long hair"
+	"?x has long tail"
+	"?x has large ear"
+then	"?x is Turkish-Angora"
+
+rule	"CatRule39"
+if	"?x is native to Turkey"
+	"?x has long hair"
+then	"?x is Turkish-Van"
+
+rule	"CatRule40"
+if	"?x is native to China"
+	"?x has short hair"
+then	"?x is Chinese-Li-Hua"
+
+rule	"CatRule41"
+if	"?x is native to America"
+	"?x has short hair"
+	"?x has large ear"
+	"?x has long foot"
+then	"?x is Chausie"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
