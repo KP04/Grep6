@@ -220,10 +220,6 @@ class RuleBaseFrame implements ActionListener {
 		proBuffer = s;
 	}
 
-	public String getQBuffer() {
-		return qBuffer;
-	}
-
 	/**
 	 * ファイルから読み込んだテキストを1行ずつ格納したString型のリストをString型に変換するメソッド
 	 * 
