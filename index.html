@@ -69,6 +69,14 @@
     <!-- ※ リンクは絶対パスに変更せず，上記のような相対パスのままで！ -->
 </ul>
 
+<h2>データファイル</h2>
+<ul>
+  <li><a href="../Grep6/RuleBaseSystem/Cat.data">Cat.data</a>
+  <li><a href="../Grep6/RuleBaseSystem/CatWM.data">CatWM.data</a>
+    <!-- 実装・変更したソースファイルへのリンク．修正する． -->
+    <!-- ※ リンクは絶対パスに変更せず，上記のような相対パスのままで！ -->
+</ul>
+
 <hr>
 <!-- -------------------------------------------------------------------------------------------------- -->
 
@@ -150,60 +158,86 @@ CarShop.data , AnimalWorld.data 等のデータファイルを実際的な応用
 <!--
  もし自分で独自に決めた仕様があれば，その説明を書く．
 -->
-<p>課題に加えて，以下の三点を独自仕様として組み込んだ．</p>
 
-<ol>
-  <li>...</li>
-</ol>
-
-<p>
-  1.に関して，...
-</p>
+今回使用するデータとして猫の特徴から猫種別に判定するようなデータ(Cat.data)を用いる．<br>
 
 <h3>プログラムの構造</h3>
 <!--  どのような設計をしたか．-->
-<p>
-  実装したプログラムは単一のクラス ... で構成されている．
-  ... クラスはインスタンスメソッドとして，... を持つ．
-  ... メソッドは引数として ... を取り，...を戻り値として返す．
-</p>
 
+前向き推論を行うクラスであるForwardChainと
+後向き推論を行うクラスであるBackwardChainでそれぞれ質疑応答を作成した．<br>
+<br>
+ForwardChainでは質問文に対して設定されたアサーションから前向き推論によって求められる全ての文章を出力し，
+それに対してマッチングを行ってマッチした文章から変数の部分を取り出して出力する．<br>
+<br>
+BackwardChainでは質問文に対してアサーションとルールから後向き推論によって求められた
+解の変数の部分を取り出して出力する．<br>
+<br>
+また、それぞれのクラスにwriteProBuffer()というメソッドを追加した。<br>
+<br>
+writeProBuffer():
+<ol>
+  質問応答の途中経過をGUIで出力する。
+</ol>
+<br>
 
 <h3>実装の説明</h3>
 <!--
  どう実装したか，ソースコードを詳細に説明する．
  特に重要な箇所はレポートにペーストして説明する．
 -->
-<p>
-  実装したプログラムに関して，先に挙げた ... メソッドの説明を行う．
-  ... は ... が実装を行った。
-</p>
+まず、ForwardChainについて、講義資料の前向き推論のプログラム(RuleBaseSystem.java)をForwardChain.javaとした．
+この時に後のBackwardChainと同クラス名の衝突を防ぐ為に以下のようにクラス名の変更等を行った．</p>
 
-<p>
-  下記は calcFibo() メソッドの実装である．ここで特筆すべき点は……
-</p>
-
-<!--
-  ソースコードをはりつける時は <pre> タグを使う
-  class="brush: java" でシンタックスハイライトする
-  重要な部分のみを貼り付ければ良い
--->
 <pre class="brush: java">
-  /* n番目のフィボナッチ数を計算 */
-  int calcFibo(int n) {
-    if (n <= 1) {
-      return 1;
+public class ForwardChain {
+    static ForwardRuleBase rb;
+    public static void main(String args[]){
+        rb = new ForwardRuleBase();
+        rb.forwardChain();
+        System.out.println(Unify.Search(rb.wm.assertions, args));
     }
-    return calcFibo(n - 1) + calcFibo(n - 2);
-  }
+}
 </pre>
 
+また，途中出力されていた文章をGUIで出力させたかったのでwriteProBufferメソッドを追加し，コンソールに出力されると同時にGUIにも出力されるようにした。
+
+<pre class="brush: java">
+public void writeProBuffer(String s, RuleBaseFrame rbf){
+    rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
+    rbf.proTextArea.setText(rbf.getProBuffer());
+}
+</pre>
+
+講義資料の内容と基本的には変わらないが，出力する際に以下のようにUnify.Search()を使うことでマッチングを行う．
+
+<pre class="brush: java">
+System.out.println(Unify.Search(rb.wm.assertions, args));
+</pre>
+
+このUnifyクラスは課題4で作成したマッチングを行い，対応する変数の組を出力するプログラムである。<br>
+<br>
+次に、BackwardChainについて、講義資料の後向き推論のプログラム(RuleBaseSystem.java)をBackwardChain.javaとした．
+この時に後のForwardChainと同クラス名の衝突を防ぐ為に以下のようにクラス名の変更等を行った。<br>
+
+<pre class="brush: java">
+public class BackwardChain {
+    static BackwardRuleBase rb;
+    static FileManager fm;
+    public static void main(String args[]){
+	if(args.length != 1){
+                　⋮
+</pre>
+
+また，途中出力されていた文章をGUIで出力させたかったのでForwardChainと同様にメソッドを追加し，GUIにも出力するようにした．<br>
+<br>
+ForwardChain，BackwardChain共に元々は文章が出力されるようになっていたので質問応答システムを作成するにあたって，
+与えられた変数の値を出力するようなものに変更した．<br>
+<br>
 
 <h3>実行例</h3>
 <!-- 実行例を示す．PNGやGIF等の絵を張っても良い．-->
-<p>
-  calcFibo() メソッドの戻り値を標準出力に出力した結果を下図に示す．
-</p>
+
 
 <!-- 画像ファイルを貼る場合は <img> タグを使う -->
 <img src="./hoge/image.png"/>
@@ -630,7 +664,7 @@ Saveを押したときの実行例を以下に示す。
 初めてのチーム開発を行うメンバーが多かったので、最初のGitHubの導入などでうまくいかないことがあった。具体的には、
 チーム内での連携がうまくいかず、みんなのデータをマージしたブランチを更新せずに作業を再開してしまい、データの錯誤が
 起こって、そのたびに修正を加えるなどがあった。次の課題からはもう少しチーム内で連絡をとりあい、こういうことがあまり
-起こらないようにしたい。
+起こらないようにしたい。<br><br>
 
 <!-- -------------------------------------------------------------------------------------------------- -->
 
