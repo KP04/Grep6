@@ -51,18 +51,28 @@
 </ul>
 
 <h2>役割分担</h2> 
-<div>
-<div><span class="name">塩谷 昂平</span><span class="task"> : 課題6-1 考察担当</span></div> 
-<div><span class="name">瀬戸口 大貴</span><span class="task"> : 課題6-2 実装担当</span></div> 
-<div><span class="name">佐藤 嵩晟</span><span class="task"> : 課題6-3 GUI担当</span></div> 
-<div><span class="name">長谷川 達也</span><span class="task"> : 課題6-4 考察担当 グループ作成書類担当</span></div> 
-</div>
+<ul>
+<li>塩谷 昂平   : 課題6-1 考察担当
+<li>瀬戸口 大貴 : 課題6-2 実装担当
+<li>佐藤 嵩晟   : 課題6-3 GUI担当, 課題6-5 GUI担当
+<li>長谷川 達也 : 課題6-4 考察担当 グループ作成書類担当
+</ul>
 
 <h2>ソースファイル</h2>
 <ul>
-  <li><a href="../../rep1/src/Fibonacci.java">BackwardChain.java</a>
-  <li><a href="../../rep1/src/Fibonacci.java">ForwardChain.java</a>
-  <li><a href="../../rep1/src/Fibonacci.java">RuleBaseSystem.java</a>
+  <li><a href="../Grep6/RuleBaseSystem/src/BackwardChain.java">BackwardChain.java</a>
+  <li><a href="../Grep6/RuleBaseSystem/src/ForwardChain.java">ForwardChain.java</a>
+  <li><a href="../Grep6/RuleBaseSystem/src/RuleBaseSystem.java">RuleBaseSystem.java</a>
+  <li><a href="../Grep6/RuleBaseSystem/src/Unify.java">Unify.java</a>
+  <li><a href="../Grep6/RuleBaseSystem/src/FileLoading.java">FileLoading.java</a>
+    <!-- 実装・変更したソースファイルへのリンク．修正する． -->
+    <!-- ※ リンクは絶対パスに変更せず，上記のような相対パスのままで！ -->
+</ul>
+
+<h2>データファイル</h2>
+<ul>
+  <li><a href="../Grep6/RuleBaseSystem/Cat.data">Cat.data</a>
+  <li><a href="../Grep6/RuleBaseSystem/CatWm.data">CatWm.data</a>
     <!-- 実装・変更したソースファイルへのリンク．修正する． -->
     <!-- ※ リンクは絶対パスに変更せず，上記のような相対パスのままで！ -->
 </ul>
@@ -75,67 +85,16 @@
 まず，教科書3.2.1の「前向き推論」のプログラムと教科書3.2.2の「後向き推論」のプログラムとの動作確認をし，
 前向き推論と後ろ向き推論の違いを説明せよ．また，実行例を示してルールが選択される過程を説明せよ．
 
-<h3>独自仕様の説明</h3>
-<!--
- もし自分で独自に決めた仕様があれば，その説明を書く．
--->
-<p>課題に加えて，以下の三点を独自仕様として組み込んだ．</p>
-
-<ol>
-  <li>...</li>
-</ol>
-
-<p>
-  1.に関して，...
-</p>
-
-<h3>プログラムの構造</h3>
+<h3>前向き推論</h3>
 <!--  どのような設計をしたか．-->
-<p>
-  実装したプログラムは単一のクラス ... で構成されている．
-  ... クラスはインスタンスメソッドとして，... を持つ．
-  ... メソッドは引数として ... を取り，...を戻り値として返す．
-</p>
+前向き推論は、最初に与えられた仮定群を元にruleを読み出しif条件にマッチすれば新しいアサーションを仮定群に追加していき、全てのruleを一通り読み出し終えたら最初の仮定群とrule条件にマッチしたことで新しく作成されたアサーションをワーキングメモリーに書き出す。
 
+この一連の流れを新しいアサーションが生成されなくなるまで繰り返すことで、ワーキングメモリーに必要な応答が書き出される。</p>
+<img src="./Grep_Resource/forward.png"/>
 
-<h3>実装の説明</h3>
-<!--
- どう実装したか，ソースコードを詳細に説明する．
- 特に重要な箇所はレポートにペーストして説明する．
--->
-<p>
-  実装したプログラムに関して，先に挙げた ... メソッドの説明を行う．
-  ... は ... が実装を行った。
-</p>
-
-<p>
-  下記は calcFibo() メソッドの実装である．ここで特筆すべき点は……
-</p>
-
-<!--
-  ソースコードをはりつける時は <pre> タグを使う
-  class="brush: java" でシンタックスハイライトする
-  重要な部分のみを貼り付ければ良い
--->
-<pre class="brush: java">
-  /* n番目のフィボナッチ数を計算 */
-  int calcFibo(int n) {
-    if (n <= 1) {
-      return 1;
-    }
-    return calcFibo(n - 1) + calcFibo(n - 2);
-  }
-</pre>
-
-
-<h3>実行例</h3>
-<!-- 実行例を示す．PNGやGIF等の絵を張っても良い．-->
-<p>
-  calcFibo() メソッドの戻り値を標準出力に出力した結果を下図に示す．
-</p>
-
-<!-- 画像ファイルを貼る場合は <img> タグを使う -->
-<img src="./hoge/image.png"/>
+<h3>後ろ向き推論</h3>
+後ろ向き推論は、ある結論の仮定が先に与えられ、それが成立するためのruleを繰り返し読み出して後件と事実とのマッチを検討する。必要なルールを呼びだし終えたとき、最初の仮定に対しての応答が与えられる。
+<img src="./Grep_Resource/backward.png"><br>
 
 <!-- -------------------------------------------------------------------------------------------------- -->
 
@@ -148,91 +107,287 @@ CarShop.data , AnimalWorld.data 等のデータファイルを実際的な応用
 <!--
  もし自分で独自に決めた仕様があれば，その説明を書く．
 -->
-<p>課題に加えて，以下の三点を独自仕様として組み込んだ．</p>
 
-<ol>
-  <li>...</li>
-</ol>
-
-<p>
-  1.に関して，...
-</p>
+今回使用するデータとして猫の特徴から猫種別に判定するようなデータ(Cat.data)を用いる．<br>
 
 <h3>プログラムの構造</h3>
 <!--  どのような設計をしたか．-->
-<p>
-  実装したプログラムは単一のクラス ... で構成されている．
-  ... クラスはインスタンスメソッドとして，... を持つ．
-  ... メソッドは引数として ... を取り，...を戻り値として返す．
-</p>
 
+前向き推論を行うクラスであるForwardChainと
+後向き推論を行うクラスであるBackwardChainでそれぞれ質疑応答を作成した．<br>
+<br>
+ForwardChainでは質問文に対して設定されたアサーションから前向き推論によって求められる全ての文章を出力し，
+それに対してマッチングを行ってマッチした文章から変数の部分を取り出して出力する．<br>
+<br>
+BackwardChainでは質問文に対してアサーションとルールから後向き推論によって求められた
+解の変数の部分を取り出して出力する．<br>
+<br>
+また、それぞれのクラスにwriteProBuffer()というメソッドを追加した。<br>
+<br>
+writeProBuffer():
+<ol>
+  質問応答の途中経過をGUIで出力する。
+</ol>
+<br>
 
 <h3>実装の説明</h3>
 <!--
  どう実装したか，ソースコードを詳細に説明する．
  特に重要な箇所はレポートにペーストして説明する．
 -->
-<p>
-  実装したプログラムに関して，先に挙げた ... メソッドの説明を行う．
-  ... は ... が実装を行った。
-</p>
+実装したプログラムに関して，この課題に関しては瀬戸口大貴くんが全体の実装を行った。<br>
+  <br>
 
-<p>
-  下記は calcFibo() メソッドの実装である．ここで特筆すべき点は……
-</p>
+まず、ForwardChainについて、講義資料の前向き推論のプログラム(RuleBaseSystem.java)をForwardChain.javaとした．
+この時に後のBackwardChainと同クラス名の衝突を防ぐ為に以下のようにクラス名の変更等を行った．</p>
 
-<!--
-  ソースコードをはりつける時は <pre> タグを使う
-  class="brush: java" でシンタックスハイライトする
-  重要な部分のみを貼り付ければ良い
--->
 <pre class="brush: java">
-  /* n番目のフィボナッチ数を計算 */
-  int calcFibo(int n) {
-    if (n <= 1) {
-      return 1;
+public class ForwardChain {
+    static ForwardRuleBase rb;
+    public static void main(String args[]){
+        rb = new ForwardRuleBase();
+        rb.forwardChain();
+        System.out.println(Unify.Search(rb.wm.assertions, args));
     }
-    return calcFibo(n - 1) + calcFibo(n - 2);
-  }
+}
 </pre>
 
+また，途中出力されていた文章をGUIで出力させたかったのでwriteProBufferメソッドを追加し，コンソールに出力されると同時にGUIにも出力されるようにした。
+
+<pre class="brush: java">
+public void writeProBuffer(String s, RuleBaseFrame rbf){
+    rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
+    rbf.proTextArea.setText(rbf.getProBuffer());
+}
+</pre>
+
+講義資料の内容と基本的には変わらないが，出力する際に以下のようにUnify.Search()を使うことでマッチングを行う．
+
+<pre class="brush: java">
+System.out.println(Unify.Search(rb.wm.assertions, args));
+</pre>
+
+このUnifyクラスは課題4で作成したマッチングを行い，対応する変数の組を出力するプログラムである。<br>
+<br>
+次に、BackwardChainについて、講義資料の後向き推論のプログラム(RuleBaseSystem.java)をBackwardChain.javaとした．
+この時に後のForwardChainと同クラス名の衝突を防ぐ為に以下のようにクラス名の変更等を行った。<br>
+
+<pre class="brush: java">
+public class BackwardChain {
+    static BackwardRuleBase rb;
+    static FileManager fm;
+    public static void main(String args[]){
+	if(args.length != 1){
+                　⋮
+</pre>
+
+また，途中出力されていた文章をGUIで出力させたかったのでForwardChainと同様にメソッドを追加し，GUIにも出力するようにした．<br>
+<br>
+ForwardChain，BackwardChain共に元々は文章が出力されるようになっていたので質問応答システムを作成するにあたって，
+与えられた変数の値を出力するようなものに変更した．<br>
+<br>
 
 <h3>実行例</h3>
-<!-- 実行例を示す．PNGやGIF等の絵を張っても良い．-->
-<p>
-  calcFibo() メソッドの戻り値を標準出力に出力した結果を下図に示す．
-</p>
+まず、前向き推論(ForwardChain)について、ルールベースは以下のようにした。
+<pre class="brush: java">
+ForwardRuleBase(){
+    fileName = "Cat.data";
+    wm = new WorkingMemory();
+    wm.addAssertion("Tama is native to Egypt");
+    wm.addAssertion("Tama has short hair");
+    wm.addAssertion("Tama has long tail");
+    wm.addAssertion("Tama has large ear");
+    wm.addAssertion("Tama has long foot");
+    wm.addAssertion("Tama is medium");
+    wm.addAssertion("Koko is native to America");
+    wm.addAssertion("Koko has long foot");
+    wm.addAssertion("Koko is medium");
+    rules = new ArrayList();
+    loadRules(fileName);
+}
+</pre>
 
-<!-- 画像ファイルを貼る場合は <img> タグを使う -->
-<img src="./hoge/image.png"/>
-
+質問文：「?x is Abyssinian」の出力結果が以下の通りである．<br>
+<br>
+<pre>
+ADD:Tama is native to Egypt
+ADD:Tama has short hair
+ADD:Tama has long tail
+ADD:Tama has large ear
+ADD:Tama has long foot
+ADD:Tama is medium
+ADD:Koko is native to America
+ADD:Koko has long foot
+ADD:Koko is medium
+apply rule:CatRule1
+Success: Tama is Abyssinian
+ADD:Tama is Abyssinian
+apply rule:CatRule2
+apply rule:CatRule3
+Success: Koko is American-Shorthair
+ADD:Koko is American-Shorthair
+apply rule:CatRule4
+apply rule:CatRule5
+apply rule:CatRule6
+apply rule:CatRule7
+apply rule:CatRule8
+apply rule:CatRule9
+apply rule:CatRule10
+Success: Tama is Egyptianmau
+ADD:Tama is Egyptianmau
+apply rule:CatRule11
+apply rule:CatRule12
+apply rule:CatRule13
+apply rule:CatRule14
+apply rule:CatRule15
+apply rule:CatRule16
+apply rule:CatRule17
+apply rule:CatRule18
+apply rule:CatRule19
+apply rule:CatRule20
+apply rule:CatRule21
+apply rule:CatRule22
+apply rule:CatRule23
+apply rule:CatRule24
+apply rule:CatRule25
+apply rule:CatRule26
+apply rule:CatRule27
+apply rule:CatRule28
+apply rule:CatRule29
+apply rule:CatRule30
+apply rule:CatRule31
+apply rule:CatRule32
+apply rule:CatRule33
+apply rule:CatRule34
+Success: Koko is Selkirk-Rex
+ADD:Koko is Selkirk-Rex
+apply rule:CatRule35
+apply rule:CatRule36
+apply rule:CatRule37
+apply rule:CatRule38
+apply rule:CatRule39
+apply rule:CatRule40
+apply rule:CatRule41
+Working Memory[Tama is native to Egypt, Tama has short hair, Tama has long tail, Tama has large ear, Tama has long foot, Tama is medium, Koko is native to America, Koko has long foot, Koko is medium, Tama is Abyssinian, Koko is American-Shorthair, Tama is Egyptianmau, Koko is Selkirk-Rex]
+apply rule:CatRule1
+apply rule:CatRule2
+apply rule:CatRule3
+apply rule:CatRule4
+apply rule:CatRule5
+apply rule:CatRule6
+apply rule:CatRule7
+apply rule:CatRule8
+apply rule:CatRule9
+apply rule:CatRule10
+apply rule:CatRule11
+apply rule:CatRule12
+apply rule:CatRule13
+apply rule:CatRule14
+apply rule:CatRule15
+apply rule:CatRule16
+apply rule:CatRule17
+apply rule:CatRule18
+apply rule:CatRule19
+apply rule:CatRule20
+apply rule:CatRule21
+apply rule:CatRule22
+apply rule:CatRule23
+apply rule:CatRule24
+apply rule:CatRule25
+apply rule:CatRule26
+apply rule:CatRule27
+apply rule:CatRule28
+apply rule:CatRule29
+apply rule:CatRule30
+apply rule:CatRule31
+apply rule:CatRule32
+apply rule:CatRule33
+apply rule:CatRule34
+apply rule:CatRule35
+apply rule:CatRule36
+apply rule:CatRule37
+apply rule:CatRule38
+apply rule:CatRule39
+apply rule:CatRule40
+apply rule:CatRule41
+Working Memory[Tama is native to Egypt, Tama has short hair, Tama has long tail, Tama has large ear, Tama has long foot, Tama is medium, Koko is native to America, Koko has long foot, Koko is medium, Tama is Abyssinian, Koko is American-Shorthair, Tama is Egyptianmau, Koko is Selkirk-Rex]
+No rule produces a new assertion
+{?x=Tama}
+[{?x=Tama}]
+</pre>
+<br>
+ワーキングメモリに全てのアサーションが入っていて，そこから質問文とマッチングして正しいものが出力されているのが確認できる．<br>
+<br>
+つぎに、後向き推論についてソースファイルCat.data,CatWm.dataを使用し，質問文：「?x is American-Shorthair」の出力結果が以下の通りである．<br>
+<br>
+<pre>
+Hypothesis:[?x is American-Shorthair]
+Success RULE
+Rule:CatRule3 [?x2 is native to America, ?x2 has long foot, ?x2 is medium]->?x2 is American-Shorthair <=> ?x is American-Shorthair
+Success WM
+Koko is native to America <=> ?x2 is native to America
+tmpPoint: 7
+Success:?x2 is native to America
+Success WM
+Koko has long foot <=> ?x2 has long foot
+tmpPoint: 8
+Success:?x2 has long foot
+Success WM
+Koko is medium <=> ?x2 is medium
+Yes
+{?x=Koko, ?x2=Koko}
+binding: {?x=Koko, ?x2=Koko}
+tmp: ?x, result:  Koko
+Query: ?x is American-Shorthair
+Answer:Koko is American-Shorthair
+</pre><br>
+よって確かに推論できていることが確認できた．<br>
+<br>
 <!-- -------------------------------------------------------------------------------------------------- -->
 
 <h2>課題6-3</h2>
 <!-- 課題を書く．-->
-上記6-2で実装した質問応答システムのGUIを作成せよ．
-
-<h3>独自仕様の説明</h3>
-<!--
- もし自分で独自に決めた仕様があれば，その説明を書く．
--->
-<p>課題に加えて，以下の三点を独自仕様として組み込んだ．</p>
-
-<ol>
-  <li>...</li>
-</ol>
-
-<p>
-  1.に関して，...
-</p>
+課題6-2で実装した質問応答システムのGUIを作成せよ．
+<br>
+<br>
 
 <h3>プログラムの構造</h3>
 <!--  どのような設計をしたか．-->
-<p>
-  実装したプログラムは単一のクラス ... で構成されている．
-  ... クラスはインスタンスメソッドとして，... を持つ．
-  ... メソッドは引数として ... を取り，...を戻り値として返す．
-</p>
+  実装したGUIは単一のクラス RuleBaseFrame で構成されている．
+  このクラスはインスタンスメソッドとして，actionPerformed(), 
+  isClear(), getOutBuffer(), setOutBuffer(),getProBuffer(),setProBuffer(),
+  writeBuffer(),initBuffer(),runForwardChain(),runBackwardChain() を持つ．
+  <br>
+  <br>
+  actionPerformed():
+  <ol>
+   ボタンが押されたときの処理を定義する。
+  </ol>
+  isClear():
+  <ol>
+  ファイル名の入力欄が空のときにtrue,入力されているときにfalseを返す。
+  </ol>
+getOutBuffer(),getProBuffer()メソッド:
+<ol>
+それぞれ質問の答えを表示するテキストエリアの文字列を取得するメソッドと、推論過程を表示するテキストエリアの文字列を取得するメソッドである。Outは出力、Proは過程(process)を表す。
+</ol>
+setOutBuffer(),setProBuffer()メソッド:
+<ol>
+それぞれのテキストエリアに表示する文字列を格納するメソッドである。
+</ol>
+writeBuffer()メソッド:
+<ol>
+データファイルから取得した文字列のリストを、一つのString型の変数にまとめて格納する。
+</ol>
+initBuffer()メソッド:
+<ol>
+過程を表示するテキストエリアと質問の答えを表示するテキストエリアのバッファを初期化する。
+</ol>
+runForwardChain(),runBackwardChain():
+<ol>
+引数としてアサーションのファイル名とルールのファイル名を受け取り、前向き推論および後ろ向き推論を行う。
+</ol>
+<br>
 
 
 <h3>実装の説明</h3>
@@ -240,14 +395,11 @@ CarShop.data , AnimalWorld.data 等のデータファイルを実際的な応用
  どう実装したか，ソースコードを詳細に説明する．
  特に重要な箇所はレポートにペーストして説明する．
 -->
-<p>
-  実装したプログラムに関して，先に挙げた ... メソッドの説明を行う．
-  ... は ... が実装を行った。
-</p>
 
-<p>
-  下記は calcFibo() メソッドの実装である．ここで特筆すべき点は……
-</p>
+  実装したプログラムに関して，この課題に関しては佐藤嵩晟くんが全体の実装を行った。<br>
+  <br>
+  
+  まずactionPerformed()メソッドについて<br>
 
 <!--
   ソースコードをはりつける時は <pre> タグを使う
@@ -255,25 +407,242 @@ CarShop.data , AnimalWorld.data 等のデータファイルを実際的な応用
   重要な部分のみを貼り付ければ良い
 -->
 <pre class="brush: java">
-  /* n番目のフィボナッチ数を計算 */
-  int calcFibo(int n) {
-    if (n <= 1) {
-      return 1;
-    }
-    return calcFibo(n - 1) + calcFibo(n - 2);
-  }
+public void actionPerformed(ActionEvent event) {
+   JButton button = (JButton) event.getSource();
+
+   if (isClear()) {// ファイル名が書かれていなかったら
+      initBuffer();// バッファ初期化
+      outBuffer = "Error:Input Filename";
+      outTextArea.setText(outBuffer);
+      return;
+   }
+
+   // ファイル読み込み
+   String assertionFileName = assertionFileTextArea.getText();
+   String ruleFileName = ruleFileTextArea.getText();
+   ArrayList< String > assertion = FileLoading.fileLoading(assertionFileName);
+   ArrayList< String > rule = FileLoading.fileLoading(ruleFileName);
+
+   // ファイルが見つからなかったら
+   if (assertion.get(0).equals("error") || rule.get(0).equals("error")) {
+      initBuffer();// バッファ初期化
+      assertionFileTextArea.setText(writeBuffer(assertion));
+      assertionFileTextArea.setText(writeBuffer(rule));
+      return;
+   }
+
+   if (button == run) {// Runが押されたら
+
+      qBuffer = qTextArea.getText();
+
+      // 質問が書かれていなかったら
+      if (qBuffer.equals("")) {
+         initBuffer();// バッファ初期化
+         outBuffer = "Error:Input Question";
+         outTextArea.setText(outBuffer);
+         return;
+      }
+
+      if (ftoggle.isSelected()) {// 前向き推論
+         runForwardChain(assertionFileName,ruleFileName);
+      } else {// 後ろ向き推論
+         runBackwardChain(assertionFileName,ruleFileName);
+      }
+
+   } else if (button == load) {// Loadが押されたら
+      // バッファの初期化
+      initBuffer();
+
+      assertionTextArea.setText(writeBuffer(assertion));
+      ruleTextArea.setText(writeBuffer(rule));
+
+   } else if (button == save) {// Saveが押されたら
+      try {
+         FileWriter assertionFw = new FileWriter(assertionFileName);
+         FileWriter ruleFw = new FileWriter(ruleFileName);
+
+         assertionFw.write(assertionTextArea.getText());
+         assertionFw.close();
+         ruleFw.write(ruleTextArea.getText());
+         ruleFw.close();
+
+         outBuffer = "Saved";
+         outTextArea.setText(outBuffer);
+
+      } catch (IOException e) {
+         System.out.println(e);
+      }
+   }
+}
 </pre>
 
+ボタンはLoad,Run,Saveの3つがあるが、これら3つの共通の処理として行うのが4〜23行目の部分である。
+まず、4〜9行目でファイル名が入力されているかどうかの確認をする。ファイル名はアサーションファイルとルールファイルの2つがあるが、少なくとも一方が入力されていない場合はreturnをする。
+2つともファイル名が入力されていれば、次に12〜15行目にかけてファイルの読み込みを行う。テキストエリアからファイル名を取得し、FileLoading.javaのfileLoadingメソッドを用いて、ファイルの文字列を1行ずつ格納したリストを得る。
+次に18行目〜23行目にかけて無事読み込みができたかを確認する。読み込みができなかった場合、リストの先頭にerrorという文字列が入るようにしたため、それを用いて判定している。
+そして押されたボタンに対応する処理を行う。
+Runが押された場合の処理は25〜41行目である。まず質問文を取得する。質問文が入力されてない場合はエラー文を表示しreturnする。
+質問文を取得できたら前向き推論および後ろ向き推論を行う。
+Loadが押された場合の処理は43〜48行目である。まずバッファを初期化し、最初にファイルから取得した文字列のリストをString型に変換してテキストエリアに表示する。
+Saveが押された場合の処理は50〜66行目である。テキストエリアの文字列を取得し、入力されたファイルにそれを書き込む。
+<br>
+<br>
+次にisClear()メソッドについて説明する。
+<pre class="brush: java">
+public boolean isClear() {
+   //ファイル名が入力されていなかったら
+   if (assertionFileTextArea.getText().equals("") || ruleFileTextArea.getText().equals("")) {
+      return true;
+   } else {
+      return false;
+   }
+}
+</pre>
+ファイル名の入力欄はアサーションファイルのファイル名とルールファイルのファイル名の2つがあるが、少なくとも一方が入力されていなければfalseを返し、2つとも入力されていればfalseを返す。<br><br>
+次にアクセッサについて説明する。
+<pre class="brush: java">
+public String getOutBuffer() {
+   return outBuffer;
+}
+
+public void setOutBuffer(String s) {
+   outBuffer = s;
+}
+
+public String getProBuffer() {
+   return proBuffer;
+}
+
+public void setProBuffer(String s) {
+   proBuffer = s;
+}
+</pre>
+これらのアクセッサは他のjavaファイルでGUIにアクセスするときに用いる。<br><br>
+次にwriteBuffer()メソッドについて説明する。
+<pre class="brush: java">
+public String writeBuffer(ArrayList< String > data) {
+   String buffer = "";
+
+   for (int i = 0; i < data.size(); i++) {
+      buffer += data.get(i);
+      buffer += "\n";
+   }
+
+   return buffer;
+}
+</pre>
+ファイルから読み込んだ文字列は1行ずつリストに格納しているため、それをString型のbufferにまとめるのがこのメソッドである。4行〜7行目にかけて、1行ずつを改行で繋げている。<br><br>
+次にinitBuffer()メソッドについて説明する。
+<pre class="brush: java">
+public void initBuffer() {
+   proBuffer = "";
+   outBuffer = "";
+   proTextArea.setText("");
+   outTextArea.setText("");
+}
+</pre>
+推論過程と質問の答えのテキストエリアを空にする。<bR><Br>
+次にrunForwardChain()メソッドについて説明する。
+<pre class="brush: java">
+public void runForwardChain(String assertionFileName, String ruleFileName){
+   ForwardRuleBase rb = new ForwardRuleBase(assertionFileName,ruleFileName, this);
+   rb.forwardChain();
+   outBuffer = Unify.Search(rb.wm.assertions, qBuffer.split("\n")).toString();
+   outTextArea.setText(outBuffer);
+}
+</pre>
+教科書の前向き推論のプログラムのmain関数の内容とほぼ同じとなっている。<br
+GUIから呼び出す用に新たにコンストラクタを追加したため、2行目のコンストラクタの引数は課題6-2までのものとは異なっている。<br>
+3行目のUnify.Searchは過去のパターンマッチングの課題で作成したものを用いた。<br><br>
+次にrunBackwardChain()メソッドについて説明する。
+<pre class="brush: java">
+public void runBackwardChain(String assertionFileName, String ruleFileName){
+   BackwardRuleBase rb;
+   FileManager fm;
+   fm = new FileManager();
+   ArrayList< BackwardRule > rules = fm.loadRules(ruleFileName);
+   ArrayList< String > wm = fm.loadWm(assertionFileName);
+   rb = new BackwardRuleBase(rules, wm, this);
+   StringTokenizer st = new StringTokenizer(qBuffer, "\n");
+   ArrayList< String > queries = new ArrayList< String >();
+   for (int i = 0; i < st.countTokens();) {
+      queries.add(st.nextToken());
+   }
+   rb.backwardChain(queries);
+}
+</pre>
+後ろ向き推論についても、教科書のmain関数とほぼ同じである。7行目のコンストラクタも、前向き推論と同様にGUIから呼び出す用に新たなコンストラクタを追加した。<br><br>
+次に、追加したコンストラクタについて説明する。<br>
+まず前向き推論について
+<pre class="brush: java">
+RuleBaseFrame rbf;
+boolean flag;
+
+ForwardRuleBase(String assertionFileName, String ruleFileName, RuleBaseFrame rbf){
+   fileName = ruleFileName;
+   wm = new WorkingMemory();
+   flag = true;
+   this.rbf = rbf;
+
+   ArrayList< String > assertion = FileLoading.fileLoading(assertionFileName);
+   for(int i=0; i < assertion.size(); i++){
+      wm.addAssertion(assertion.get(i),rbf,flag);
+   }
+		
+   rules = new ArrayList< ForwardRule >();
+   loadRules(fileName);
+ }
+</pre>
+フィールドにGUIの変数と、boolean型変数のflagを追加した。flagは、GUIから前向き推論を行ったのか、ForwardChain.javaから前向き推論を行ったのかを区別するために用いる。
+コンストラクタは、引数としてアサーションファイルのファイル名、ルールファイルのファイル名、GUIのポインタを受け取る。<br><br>
+次に後ろ向き推論について
+<pre class="brush: java">
+RuleBaseFrame rbf;
+boolean flag;
+
+BackwardRuleBase(ArrayList< BackwardRule > theRules,ArrayList< String > theWm, RuleBaseFrame rbf){
+   wm = theWm;
+   rules = theRules;
+   this.rbf = rbf;
+   flag = true;
+}
+</pre>
+後ろ向き推論のコンストラクタについても、前向き推論と同様である。<br><br>
+また、GUIの推論過程を表示するテキストエリアや質問の答えを表示するテキストエリアに文字列を表示するために新たにメソッドを追加したため、それについて説明する。
+追加はForwardChain.javaとBackwardChain.javaにした。
+<pre class="brush: java">
+public void writeProBuffer(String s){
+   if(flag){
+      rbf.setProBuffer(rbf.getProBuffer()+s+"\n");
+      rbf.proTextArea.setText(rbf.getProBuffer());
+   }
+}
+    
+public void writeOutBuffer(String s){
+   if(flag){
+      rbf.setOutBuffer(rbf.getOutBuffer()+s+"\n");
+      rbf.outTextArea.setText(rbf.getOutBuffer());
+   }
+}
+</pre>
+writeProBufferとwriteOutBufferのProおよびOutは過程(process)と出力(out)を表す。引数としてString型の文字列を受け取り、それをテキストエリアに追加する処理を行う。
+flagは、GUIからこのメソッドを呼び出した場合はtrueとなっており、その他から呼び出した場合はfalseになっているため、GUI以外から呼び出した場合はこの処理は行われない。
+
+<!--
+  ソースコードをはりつける時は <pre> タグを使う
+  class="brush: java" でシンタックスハイライトする
+  重要な部分のみを貼り付ければ良い
+-->
+<br><br>
 
 <h3>実行例</h3>
 <!-- 実行例を示す．PNGやGIF等の絵を張っても良い．-->
-<p>
-  calcFibo() メソッドの戻り値を標準出力に出力した結果を下図に示す．
-</p>
+GUIの実行例を以下に示す。<br><br>
 
 <!-- 画像ファイルを貼る場合は <img> タグを使う -->
-<img src="./hoge/image.png"/>
-
+<img src="./Grep_Resource/1.png"/>
+<img src="./Grep_Resource/2.png"/>
+<br>
 <!-- -------------------------------------------------------------------------------------------------- -->
 
 <h2>課題6-4</h2>
@@ -289,18 +658,87 @@ CarShop.data , AnimalWorld.data 等のデータファイルを実際的な応用
 <li>GitHub</li>
 </ol>
 <br>
-  まず、Lineについて、これはグループ間の連絡用のツールとして使用する。本来ならファイルの送信などもやりやすい
-  Slackなどを導入するべきではあると思う。だが、私が部活でこれを使用し始めたころ、メンバーが慣れるまでに時間がかかり
-  メッセージに気づかなかったり、返信が来ないなどの事態が発生したという経験がある。また、今回の演習は規模が小さいもの
-  であるため、そこまで連絡用のツールにこだわる必要もないなと判断し、今回はLineを使用することにした。
+  まず、Lineについて、これはグループ間の連絡用のツールとして使用する。本来ならファイルの送信などもやりやすいSlackなどを
+  導入するべきではあると思う。だが、私が部活でこれを使用し始めたころ、メンバーが慣れるまでに時間がかかりメッセージに気づ
+  かなかったり、返信が来ないなどの事態が発生したという経験がある。また、今回の演習は規模が小さいものであるため、そこまで
+  連絡用のツールにこだわる必要もないなと判断し、今回はLineを使用することにした。
 <br>
 <br>
 
-  次に、GitHubについて、本当は初心者でも扱いやすいGitをGUIで制御することができるSourceTreeも導入したかったのだが、
-  作業環境のメインがCSEであるので、今回はCLIで操作を各々行うことにした。管理の方法としては、私以外のメンバーにそれぞれ
-  ブランチを作成してもらい、そこに各々の進捗状況を反映しつつ、私がmasterブランチに統合して、みんなで共有するという形
-  を取った。それぞれがmasterブランチに対して統合したほうが効率としてはいいのだが、まだ慣れないうちは変にデータを書き換えて
-  しまう可能性を否定はできないため、管理者は一人だけ立てる形を今回はとらせてもらった。
+  次に、GitHubについて、本当は初心者でも扱いやすいGitをGUIで制御することができるSourceTreeも導入したかったのだが、作業
+  環境のメインがCSEであるので、今回はCLIで操作を各々行うことにした。管理の方法としては、私以外のメンバーにそれぞれブラン
+  チを作成してもらい、そこに各々の進捗状況を反映しつつ、私がmasterブランチに統合して、みんなで共有するという形を取った。
+  それぞれがmasterブランチに対して統合したほうが効率としてはいいのだが、まだ慣れないうちは変にデータを書き換えてしまう可
+  能性を否定はできないため、管理者は一人だけ立てる形を今回はとらせてもらった。
+<br>
+<br>
+<!-- -------------------------------------------------------------------------------------------------- -->
+
+<h2>課題6-5</h2>
+<!-- 課題を書く．-->
+ 課題6-3で実装したGUIを発展させ，質問応答だけでなく，ルールの編集（追加，削除，変更）などについてもGUIで行えるようにせよ．
+ <br>
+ <br>
+
+<h3>独自仕様の説明</h3>
+<!--
+ もし自分で独自に決めた仕様があれば，その説明を書く．
+-->
+  アサーションをGUIで編集できるようにした。
+  <br>
+  <br>
+
+<h3>プログラムの構造</h3>
+<!--  どのような設計をしたか．-->
+  GUIとしてアサーションやルールのファイル名やその内容を表示するテキストエリアを
+  表示し、ユーザが行った編集をSaveボタンでファイルに反映する。
+
+<br><br>
+
+<h3>実装の説明</h3>
+<!--
+ どう実装したか，ソースコードを詳細に説明する．
+ 特に重要な箇所はレポートにペーストして説明する．
+-->
+  課題6-3でも説明したが、Saveボタンが押された際の処理を説明する。
+<br>
+<br>
+  Saveボタンが押されたら、アサーションとルールのテキストの内容を受け取り、
+  それをファイルに書き込み処理を行っている。その後、処理終了時にResultの
+  テキストエリアに"Saved"と表示する。以下がその部分の処理である。
+
+<pre class="brush: java">
+public void actionPerformed(ActionEvent event) {
+   JButton button = (JButton) event.getSource();
+
+   ...
+   
+   } else if (button == save) {// Saveが押されたら
+      try {
+         FileWriter assertionFw = new FileWriter(assertionFileName);
+         FileWriter ruleFw = new FileWriter(ruleFileName);
+
+         assertionFw.write(assertionTextArea.getText());
+         assertionFw.close();
+         ruleFw.write(ruleTextArea.getText());
+         ruleFw.close();
+
+         outBuffer = "Saved";
+         outTextArea.setText(outBuffer);
+
+      } catch (IOException e) {
+         System.out.println(e);
+      }
+   }
+}
+</pre>
+
+<h3>実行例</h3>
+<!-- 実行例を示す．PNGやGIF等の絵を張っても良い．-->
+Saveを押したときの実行例を以下に示す。
+<br>
+<br>
+<img src="Grep_Resource/Save.png"/>
 
 <!-- -------------------------------------------------------------------------------------------------- -->
 
@@ -310,11 +748,11 @@ CarShop.data , AnimalWorld.data 等のデータファイルを実際的な応用
  例: 自分で工夫して解決した点，その解決手法，なぜそうしたのか，その手法の素晴らしさ，上手くいかなかった点，なぜ上手くいかなかったのか，など．
  例: 今回はできなかったが，更に〜の機能を追加すべきである．なぜなら，...
 -->
-<p>
-  今回，フィボナッチ数をもとめるためのクラス Fibonacci を実装し，インスタンスメソッドとして機能を実装したが，
-  これは静的クラス，または，シングルトンとして実装した方が適していたように考えられる．
-  なぜなら……
-</p>
+
+主にソースコードを書いていたメンバーに起こったことだが、チーム開発を進めるうちに、思い描いていたソースコードがそれぞれ違って
+整合性がとれないという事態が発生した。具体的にはGUIの操作からBackward,Forwardまですべて同じクラスで管理するか、それぞれ
+別々のクラスに分けて管理するかだ。前者の方でやると、変数へのアクセスなどはしやすいものの、どの変数がどの操作に対して対応している
+変数なのかが分かりにくいし、対応していない変数に対してもし不正な変更をしてしまった場合、バグの原因にもなり得てしまう。逆に後者の場合、それぞれのクラスの内部で処理を決めるため、管理がしやすく、不正な変更に対してもある程度は抑制することができる。なので今回のチームの結論としては後者を選択した。なのだが、こういうことは開発を進める前の段階ですでに決めてあるべきことであるため、今後はチーム内でプログラムやクラスの構造を事前に決めておいてから開発を進めていくべきであろう。
 
 <hr>
 
@@ -324,10 +762,10 @@ CarShop.data , AnimalWorld.data 等のデータファイルを実際的な応用
 <h2>感想</h2>
 <!-- 感想を書く．-->
 <!-- 例: 〜が面白かった，〜がわからなかった，〜を作ってみたい，講義・演習に関する要望，など．-->
-<p>
-  フィボナッチ数の一般項をもとめるのに夢中であやうく実装が間に合わなくなるところだった．
-  実装に関しては……
-</p>
+初めてのチーム開発を行うメンバーが多かったので、最初のGitHubの導入などでうまくいかないことがあった。具体的には、
+チーム内での連携がうまくいかず、みんなのデータをマージしたブランチを更新せずに作業を再開してしまい、データの錯誤が
+起こって、そのたびに修正を加えるなどがあった。次の課題からはもう少しチーム内で連絡をとりあい、こういうことがあまり
+起こらないようにしたい。<br><br>
 
 <!-- -------------------------------------------------------------------------------------------------- -->
 
@@ -335,8 +773,7 @@ CarShop.data , AnimalWorld.data 等のデータファイルを実際的な応用
 <!-- 参考文献を書く．助けてもらった人がいれば，それも書く-->
 
 <ul>
-  <li>2XXXXXXX 東工太郎君</li>
-  <li>名大次郎 著（19XX）『Java プログラミング』オレイリー社</li>
+  <li>新谷虎松 著（2002）『Javaによる知能プログラミング入門』コロナ社</li>
 </ul>
 
 </body>

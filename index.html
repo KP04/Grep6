@@ -85,67 +85,16 @@
 まず，教科書3.2.1の「前向き推論」のプログラムと教科書3.2.2の「後向き推論」のプログラムとの動作確認をし，
 前向き推論と後ろ向き推論の違いを説明せよ．また，実行例を示してルールが選択される過程を説明せよ．
 
-<h3>独自仕様の説明</h3>
-<!--
- もし自分で独自に決めた仕様があれば，その説明を書く．
--->
-<p>課題に加えて，以下の三点を独自仕様として組み込んだ．</p>
-
-<ol>
-  <li>...</li>
-</ol>
-
-<p>
-  1.に関して，...
-</p>
-
-<h3>プログラムの構造</h3>
+<h3>前向き推論</h3>
 <!--  どのような設計をしたか．-->
-<p>
-  実装したプログラムは単一のクラス ... で構成されている．
-  ... クラスはインスタンスメソッドとして，... を持つ．
-  ... メソッドは引数として ... を取り，...を戻り値として返す．
-</p>
+前向き推論は、最初に与えられた仮定群を元にruleを読み出しif条件にマッチすれば新しいアサーションを仮定群に追加していき、全てのruleを一通り読み出し終えたら最初の仮定群とrule条件にマッチしたことで新しく作成されたアサーションをワーキングメモリーに書き出す。
 
+この一連の流れを新しいアサーションが生成されなくなるまで繰り返すことで、ワーキングメモリーに必要な応答が書き出される。</p>
+<img src="./Grep_Resource/forward.png"/>
 
-<h3>実装の説明</h3>
-<!--
- どう実装したか，ソースコードを詳細に説明する．
- 特に重要な箇所はレポートにペーストして説明する．
--->
-<p>
-  実装したプログラムに関して，先に挙げた ... メソッドの説明を行う．
-  ... は ... が実装を行った。
-</p>
-
-<p>
-  下記は calcFibo() メソッドの実装である．ここで特筆すべき点は……
-</p>
-
-<!--
-  ソースコードをはりつける時は <pre> タグを使う
-  class="brush: java" でシンタックスハイライトする
-  重要な部分のみを貼り付ければ良い
--->
-<pre class="brush: java">
-  /* n番目のフィボナッチ数を計算 */
-  int calcFibo(int n) {
-    if (n <= 1) {
-      return 1;
-    }
-    return calcFibo(n - 1) + calcFibo(n - 2);
-  }
-</pre>
-
-
-<h3>実行例</h3>
-<!-- 実行例を示す．PNGやGIF等の絵を張っても良い．-->
-<p>
-  calcFibo() メソッドの戻り値を標準出力に出力した結果を下図に示す．
-</p>
-
-<!-- 画像ファイルを貼る場合は <img> タグを使う -->
-<img src="./hoge/image.png"/>
+<h3>後ろ向き推論</h3>
+後ろ向き推論は、ある結論の仮定が先に与えられ、それが成立するためのruleを繰り返し読み出して後件と事実とのマッチを検討する。必要なルールを呼びだし終えたとき、最初の仮定に対しての応答が与えられる。
+<img src="./Grep_Resource/backward.png"><br>
 
 <!-- -------------------------------------------------------------------------------------------------- -->
 
@@ -186,6 +135,9 @@ writeProBuffer():
  どう実装したか，ソースコードを詳細に説明する．
  特に重要な箇所はレポートにペーストして説明する．
 -->
+実装したプログラムに関して，この課題に関しては瀬戸口大貴くんが全体の実装を行った。<br>
+  <br>
+
 まず、ForwardChainについて、講義資料の前向き推論のプログラム(RuleBaseSystem.java)をForwardChain.javaとした．
 この時に後のBackwardChainと同クラス名の衝突を防ぐ為に以下のようにクラス名の変更等を行った．</p>
 
@@ -236,12 +188,161 @@ ForwardChain，BackwardChain共に元々は文章が出力されるようにな�
 <br>
 
 <h3>実行例</h3>
-<!-- 実行例を示す．PNGやGIF等の絵を張っても良い．-->
+まず、前向き推論(ForwardChain)について、ルールベースは以下のようにした。
+<pre class="brush: java">
+ForwardRuleBase(){
+    fileName = "Cat.data";
+    wm = new WorkingMemory();
+    wm.addAssertion("Tama is native to Egypt");
+    wm.addAssertion("Tama has short hair");
+    wm.addAssertion("Tama has long tail");
+    wm.addAssertion("Tama has large ear");
+    wm.addAssertion("Tama has long foot");
+    wm.addAssertion("Tama is medium");
+    wm.addAssertion("Koko is native to America");
+    wm.addAssertion("Koko has long foot");
+    wm.addAssertion("Koko is medium");
+    rules = new ArrayList();
+    loadRules(fileName);
+}
+</pre>
 
-
-<!-- 画像ファイルを貼る場合は <img> タグを使う -->
-<img src="./hoge/image.png"/>
-
+質問文：「?x is Abyssinian」の出力結果が以下の通りである．<br>
+<br>
+<pre>
+ADD:Tama is native to Egypt
+ADD:Tama has short hair
+ADD:Tama has long tail
+ADD:Tama has large ear
+ADD:Tama has long foot
+ADD:Tama is medium
+ADD:Koko is native to America
+ADD:Koko has long foot
+ADD:Koko is medium
+apply rule:CatRule1
+Success: Tama is Abyssinian
+ADD:Tama is Abyssinian
+apply rule:CatRule2
+apply rule:CatRule3
+Success: Koko is American-Shorthair
+ADD:Koko is American-Shorthair
+apply rule:CatRule4
+apply rule:CatRule5
+apply rule:CatRule6
+apply rule:CatRule7
+apply rule:CatRule8
+apply rule:CatRule9
+apply rule:CatRule10
+Success: Tama is Egyptianmau
+ADD:Tama is Egyptianmau
+apply rule:CatRule11
+apply rule:CatRule12
+apply rule:CatRule13
+apply rule:CatRule14
+apply rule:CatRule15
+apply rule:CatRule16
+apply rule:CatRule17
+apply rule:CatRule18
+apply rule:CatRule19
+apply rule:CatRule20
+apply rule:CatRule21
+apply rule:CatRule22
+apply rule:CatRule23
+apply rule:CatRule24
+apply rule:CatRule25
+apply rule:CatRule26
+apply rule:CatRule27
+apply rule:CatRule28
+apply rule:CatRule29
+apply rule:CatRule30
+apply rule:CatRule31
+apply rule:CatRule32
+apply rule:CatRule33
+apply rule:CatRule34
+Success: Koko is Selkirk-Rex
+ADD:Koko is Selkirk-Rex
+apply rule:CatRule35
+apply rule:CatRule36
+apply rule:CatRule37
+apply rule:CatRule38
+apply rule:CatRule39
+apply rule:CatRule40
+apply rule:CatRule41
+Working Memory[Tama is native to Egypt, Tama has short hair, Tama has long tail, Tama has large ear, Tama has long foot, Tama is medium, Koko is native to America, Koko has long foot, Koko is medium, Tama is Abyssinian, Koko is American-Shorthair, Tama is Egyptianmau, Koko is Selkirk-Rex]
+apply rule:CatRule1
+apply rule:CatRule2
+apply rule:CatRule3
+apply rule:CatRule4
+apply rule:CatRule5
+apply rule:CatRule6
+apply rule:CatRule7
+apply rule:CatRule8
+apply rule:CatRule9
+apply rule:CatRule10
+apply rule:CatRule11
+apply rule:CatRule12
+apply rule:CatRule13
+apply rule:CatRule14
+apply rule:CatRule15
+apply rule:CatRule16
+apply rule:CatRule17
+apply rule:CatRule18
+apply rule:CatRule19
+apply rule:CatRule20
+apply rule:CatRule21
+apply rule:CatRule22
+apply rule:CatRule23
+apply rule:CatRule24
+apply rule:CatRule25
+apply rule:CatRule26
+apply rule:CatRule27
+apply rule:CatRule28
+apply rule:CatRule29
+apply rule:CatRule30
+apply rule:CatRule31
+apply rule:CatRule32
+apply rule:CatRule33
+apply rule:CatRule34
+apply rule:CatRule35
+apply rule:CatRule36
+apply rule:CatRule37
+apply rule:CatRule38
+apply rule:CatRule39
+apply rule:CatRule40
+apply rule:CatRule41
+Working Memory[Tama is native to Egypt, Tama has short hair, Tama has long tail, Tama has large ear, Tama has long foot, Tama is medium, Koko is native to America, Koko has long foot, Koko is medium, Tama is Abyssinian, Koko is American-Shorthair, Tama is Egyptianmau, Koko is Selkirk-Rex]
+No rule produces a new assertion
+{?x=Tama}
+[{?x=Tama}]
+</pre>
+<br>
+ワーキングメモリに全てのアサーションが入っていて，そこから質問文とマッチングして正しいものが出力されているのが確認できる．<br>
+<br>
+つぎに、後向き推論についてソースファイルCat.data,CatWm.dataを使用し，質問文：「?x is American-Shorthair」の出力結果が以下の通りである．<br>
+<br>
+<pre>
+Hypothesis:[?x is American-Shorthair]
+Success RULE
+Rule:CatRule3 [?x2 is native to America, ?x2 has long foot, ?x2 is medium]->?x2 is American-Shorthair <=> ?x is American-Shorthair
+Success WM
+Koko is native to America <=> ?x2 is native to America
+tmpPoint: 7
+Success:?x2 is native to America
+Success WM
+Koko has long foot <=> ?x2 has long foot
+tmpPoint: 8
+Success:?x2 has long foot
+Success WM
+Koko is medium <=> ?x2 is medium
+Yes
+{?x=Koko, ?x2=Koko}
+binding: {?x=Koko, ?x2=Koko}
+tmp: ?x, result:  Koko
+Query: ?x is American-Shorthair
+Answer:Koko is American-Shorthair
+</pre><br>
+よって確かに推論できていることが確認できた．<br>
+<br>
 <!-- -------------------------------------------------------------------------------------------------- -->
 
 <h2>課題6-3</h2>
@@ -648,11 +749,11 @@ Saveを押したときの実行例を以下に示す。
  例: 今回はできなかったが，更に〜の機能を追加すべきである．なぜなら，...
 -->
 
-  チーム開発が初めてのメンバーが多かったというのもあり、ほかの人が書いたプログラムに対してどのように
-  適応させればうまくいくかの部分があまりよい実装にできていない気がした。
-<br>
-<br>
-例えば...
+主にソースコードを書いていたメンバーに起こったことだが、チーム開発を進めるうちに、思い描いていたソースコードがそれぞれ違って
+整合性がとれないという事態が発生した。具体的にはGUIの操作からBackward,Forwardまですべて同じクラスで管理するか、それぞれ
+別々のクラスに分けて管理するかだ。前者の方でやると、変数へのアクセスなどはしやすいものの、どの変数がどの操作に対して対応している
+変数なのかが分かりにくいし、対応していない変数に対してもし不正な変更をしてしまった場合、バグの原因にもなり得てしまう。逆に後者の場合、それぞれのクラスの内部で処理を決めるため、管理がしやすく、不正な変更に対してもある程度は抑制することができる。なので今回のチームの結論としては後者を選択した。なのだが、こういうことは開発を進める前の段階ですでに決めてあるべきことであるため、今後はチーム内でプログラムやクラスの構造を事前に決めておいてから開発を進めていくべきであろう。
+
 <hr>
 
 <!-- -------------------------------------------------------------------------------------------------- -->
@@ -663,7 +764,8 @@ Saveを押したときの実行例を以下に示す。
 <!-- 例: 〜が面白かった，〜がわからなかった，〜を作ってみたい，講義・演習に関する要望，など．-->
 初めてのチーム開発を行うメンバーが多かったので、最初のGitHubの導入などでうまくいかないことがあった。具体的には、
 チーム内での連携がうまくいかず、みんなのデータをマージしたブランチを更新せずに作業を再開してしまい、データの錯誤が
-起こって、そのたびに修正を加えるなどがあった。次の課題からはもう少しチーム内で連絡をとりあい、こういうことがあまり
+起こって、そのたびに修正を加えるなどがあったり、考察でも書いたがそもそもプログラムの構造の思惑に相違があったりした。
+次の課題からはもう少しチーム内で連絡をとりあい、こういうことがあまり
 起こらないようにしたい。<br><br>
 
 <!-- -------------------------------------------------------------------------------------------------- -->
